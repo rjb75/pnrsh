@@ -1,0 +1,42 @@
+{{template "base" .}}
+
+{{define "main"}}
+<div class="container">
+    <h2>PNR #{{.PNR.Pnr}}</h2>
+
+    <div class="row">
+        <div class="col">
+          <h3>Flights</h3>
+          {{range .PNR.Flights}}
+              <h5><strong>{{.MarketingAirlineCode}}{{.FlightNumber}}</strong> {{.OriginAirportCode}} ✈️ {{.DestinationAirportCode}} <span class="badge bg-primary">{{.Status}}</span></h5>
+              <table class="table">
+                  <tbody>
+                      <tr>
+                          <td><strong>Scheduled Departure</strong></td>
+                          <td>{{.ScheduledDeparture}}</td>
+                      </tr>
+  
+                      <tr>
+                          <td><strong>Scheduled Arrival</strong></td>
+                          <td>{{.ScheduledArrival}}</td>
+                      </tr>
+
+                      <tr>
+                        <td><strong>Duration (minutes)</strong></td>
+                        <td>{{.Duration}}</td>
+                    </tr>
+  
+                      <tr>
+                          <td><strong>Operating/Marketing Airline</strong></td>
+                          <td>{{.OperatingAirlineCode}}{{.MarketingAirlineCode}}</td>
+                      </tr>
+  
+                      <tr>
+                          <td><strong>Cabin</strong></td>
+                          <td>{{.Cabin}}({{.SabreCode}})</td>
+                      </tr>
+                  </tbody>
+              </table>
+          {{end}}
+  </div>
+{{end}}

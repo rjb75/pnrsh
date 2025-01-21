@@ -7,6 +7,7 @@ import (
 	aircanada "github.com/pnrsh/pnrsh/pkg/aircanada/pnr"
 	delta "github.com/pnrsh/pnrsh/pkg/delta/pnr"
 	united "github.com/pnrsh/pnrsh/pkg/united/pnr"
+	westjet "github.com/pnrsh/pnrsh/pkg/westjet/pnr"
 )
 
 func DeltaRetrieveHandler(w http.ResponseWriter, r *http.Request) {
@@ -182,6 +183,42 @@ func VirginRetrieveHandler(w http.ResponseWriter, r *http.Request) {
 
 	t.Execute(w, struct {
 		PNR              delta.PNR
+		ConfirmationCode string
+		CommitHash       string
+	}{
+		retrievedPNR,
+		confirmationCode,
+		commitHash,
+	})
+}
+
+func WestjetRetrieveHandler(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		w.Header().Add("Location", "/westjet?error=t")
+		w.WriteHeader(302)
+		return
+	}
+
+	lastName := r.Form.Get("last_name")
+	confirmationCode := r.Form.Get("confirmation_code")
+
+	if len(confirmationCode) != 6 || len(lastName) == 0 {
+		w.Header().Add("Location", "/westjet?error=t")
+		w.WriteHeader(302)
+		return
+	}
+
+	retrievedPNR, err := westjet.Retrieve(lastName, confirmationCode)
+	if err != nil {
+		w.Header().Add("Location", "/westjet?error=t")
+		w.WriteHeader(302)
+		return
+	}
+
+	t := Parse("westjet-show.html")
+
+	t.Execute(w, struct {
+		PNR              westjet.PNR
 		ConfirmationCode string
 		CommitHash       string
 	}{

@@ -16,6 +16,7 @@ const (
 	deltaEnabled      = true
 	unitedEnabled     = true
 	virginEnabled     = true
+	westjetEnabled    = true
 )
 
 var (
@@ -58,6 +59,11 @@ func main() {
 	if virginEnabled {
 		r.HandleFunc("/virgin", VirginHomeHandler).Methods("GET")
 		r.HandleFunc("/virgin", VirginRetrieveHandler).Methods("POST")
+	}
+
+	if westjetEnabled {
+		r.HandleFunc("/westjet", WestjetHomeHandler).Methods("GET")
+		r.HandleFunc("/westjet", WestjetRetrieveHandler).Methods("POST")
 	}
 
 	srv := &http.Server{
